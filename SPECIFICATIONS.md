@@ -1,33 +1,22 @@
 # ekbMed technical specification
 
-Version 0.1.0; package integration from the approved September 2026 framework.
+Version 0.1.0.
 
 ## Philosophy and scope
 
-The package turns validated project functions into an installable, documented
-namespace. Statistical definitions and public defaults are preserved. It is a
-library of generic tools, not an ADOSeq or PDSeq analysis project. Endpoint
-construction, cohort eligibility, data joins and SAP decisions remain external.
-No clinical data are distributed.
+ekbMed provides reusable tools for clinical survival analysis and reporting.
+Its API separates data preparation, propensity-score weighting, multiple
+imputation, outcome modelling and presentation. Analysis choices are explicit:
+researchers specify covariates, reference groups, estimands and missing-data
+strategies according to their study design and statistical analysis plan.
 
-## Authoritative sources
+Cohort eligibility, endpoint construction, censoring rules and data linkage
+belong in the analysis project. The package does not choose these definitions
+or perform automatic model selection. No clinical datasets are distributed.
 
-Source priority is the latest approved project implementation, not the former
-placeholder repository. Sources used:
-
-| Module | Authoritative version |
-|---|---|
-| 00_utils | API refactor, 25 September 2026 |
-| 01_survival | Latest standalone source, 23 September 2026 |
-| 02_cox / 03_subgroup_cox / 05_imputation / 06_mi_iptw_cox | Message update, 25 September 2026, following the API refactor |
-| 04_weighting / 09_themes_plots / 10_compatibility_wrappers | API refactor, 25 September 2026 |
-| 07_tables | Table update v6, 25 September 2026 |
-| 08_clinical_conversion | Latest standalone source, 23 September 2026 |
-| 11_clinical_QC | Latest standalone source, 24 September 2026 |
-
-`SOURCE_MANIFEST.csv` records source filenames and SHA-256 values before package
-integration. NEWS lists deliberate code fixes. The repository was used for author
-identity and existing metadata only; its dummy statistical code was not imported.
+This document describes object contracts, statistical conventions and developer
+expectations. See [README.md](README.md) for worked examples, function help for
+arguments and return values, and [NEWS.md](NEWS.md) for version changes.
 
 ## Public API and object contracts
 
@@ -112,7 +101,7 @@ propensity-estimation variance adjustment is introduced.
 
 Date parsing retains dmy-first priority and explicit partial-date rules.
 Inclusive intervals default to +1 day; no RFS/TTNT/TOT rule is defined here.
-Response conversion retains the existing configurable NC/NED/MR conventions.
+Response conversion provides configurable NC/NED/MR conventions.
 ORR and DCR standalone helpers exclude non-evaluable response codes by default.
 
 ## Reporting conventions
@@ -132,8 +121,8 @@ Month-labelled tables assume follow-up in months.
 Treatment-course tables treat blanks as missing, support explicit level order,
 and summarize toxicity details within toxicity-positive patients by default.
 Flextables are editable, use black-and-white styling, bold variable blocks,
-indented levels and more deeply indented landmarks. `tbl_survival` remains a
-tibble for compatibility; it is not routed through as_ekb_flextable directly.
+indented levels and more deeply indented landmarks. `tbl_survival` returns a
+tibble; it is not routed through as_ekb_flextable directly.
 Forest plots are ggplot objects with level-effect p-values by default.
 
 ## Messages and dependencies
@@ -157,20 +146,36 @@ ate_weights, survival_time, add_median_survival, cox_output,
 coxph_meta_analysis, fit_mi_iptw_cox; calc_survival retains its argument spelling.
 The combined legacy MI-IPTW wrapper warns and calls the two current entry points.
 Automatic backward selection is not implemented: cox_output warns for requested
-non-full models and fits the full model. No existing public name is removed.
+non-full models and fits the full model. Compatibility wrappers are documented separately from the recommended API.
 
 ## Deliberate exclusions
 
-No new estimands, automatic model selection, automatic trimming, automatic
-reference changes, interaction-first workflow, outcome imputation, patient data,
-clinical data ingestion, or study-specific R Markdown orchestration. No silent
-claim of causal identification, MAR validity or double robustness.
+The package does not automatically select models, trim weights, change
+reference groups, impute outcomes or orchestrate study-specific reports.
+Subgroup effect estimates do not establish treatment-effect heterogeneity;
+interaction testing requires a separate analysis decision. Weighting and
+imputation do not establish causal identification, the validity of missing-at-
+random assumptions or double robustness by themselves.
 
-## Validation boundary
+## Testing and interpretation
 
-The source framework was reported by the project owner as validated on PDSeq,
-including Cox, IPTW, subgroups, MI robust pooling, response calculations, tables
-and plots. Private data were not copied or reanalysed for packaging. This is
-historical user-reported validation, not an independently repeated clinical
-validation. `HANDOFF.md` records the actual package tests, dependency coverage,
-R CMD check results and any remaining execution limits for this distribution.
+The test suite uses synthetic data and checks results against direct calls to
+survival, WeightIt and mice. Coverage includes unweighted and weighted Cox
+models, robust variance pooling, reusable imputations, subgroup weighting
+scopes, response summaries, tables, plots, input validation and messages.
+Tests require no network access and report skips when an optional backend is
+unavailable. Full release checks should install all suggested dependencies.
+
+These checks assess software behaviour and agreement with the specified
+backends. They do not establish the suitability of an analysis for a particular
+study. Researchers must assess model assumptions, covariate balance, overlap,
+imputation diagnostics and the clinical interpretation of their endpoints.
+
+## Maintenance conventions
+
+- Generate NAMESPACE and man/ from roxygen2 comments in R/.
+- Accompany behavioural changes with focused tests and a NEWS entry.
+- Document changes to defaults, estimands, missingness or variance handling
+  explicitly; do not introduce them as incidental implementation changes.
+- Keep examples reproducible and independent of private data or local paths.
+- Record package versions and analysis settings alongside study results.

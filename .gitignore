@@ -5,3 +5,6 @@
 *.Rcheck/
 *.tar.gz
 *.zip
+HANDOFF.md
+NEWS.md
+validation/
