@@ -1,0 +1,10 @@
+^\.github$
+^SPECIFICATIONS\.md$
+^HANDOFF\.md$
+^SOURCE_MANIFEST\.csv$
+^validation$
+^LICENSE\.md$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.positai$
+^\.claude$

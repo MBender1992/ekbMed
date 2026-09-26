@@ -1,0 +1,51 @@
+Package: ekbMed
+Title: Reproducible Clinical Survival Analysis and Reporting
+Version: 0.1.0
+Authors@R: person("Marc", "Bender", email = "mbender1992@web.de", role = c("aut", "cre"))
+Description: Provides a unified workflow for clinical survival analysis,
+    propensity-score weighting, multiple imputation, subgroup treatment
+    effects, and publication-ready tables and forest plots. Separates
+    imputation from outcome modelling and estimates weights within each
+    completed imputation. Includes explicit clinical conversion rules and
+    non-mutating data quality checks.
+License: MIT + file LICENSE
+URL: https://github.com/MBender1992/ekbMed
+BugReports: https://github.com/MBender1992/ekbMed/issues
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports:
+    broom,
+    dplyr,
+    ggplot2 (>= 3.4.0),
+    graphics,
+    grid,
+    lubridate,
+    rlang,
+    scales,
+    stats,
+    survival (>= 3.5.0),
+    tibble,
+    tidyr,
+    utils
+Suggests:
+    adjustedCurves,
+    broom.helpers,
+    cobalt,
+    cowplot,
+    devtools,
+    flextable,
+    ggsurvfit,
+    gtsummary (>= 2.0.0),
+    mice (>= 3.13.2),
+    officer,
+    pammtools,
+    patchwork,
+    RISCA,
+    roxygen2,
+    smd,
+    survey,
+    testthat (>= 3.1.0),
+    WeightIt
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

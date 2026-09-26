@@ -1,0 +1,19 @@
+Running <validation-workspace>/r-runtime/usr/lib/R/bin/R CMD INSTALL \
+  <validation-workspace>/ekbMed --install-tests 
+* installing to library ‘<validation-workspace>/r-runtime/usr/lib/R/site-library’
+* installing *source* package ‘ekbMed’ ...
+** using staged installation
+** R
+** tests
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (ekbMed)
+Warning message:
+In do.call(".Call", list(.NAME, ...)) :
+  Cannot parse stat file, cannot read file: No such file or directory
+Installation and exported API smoke test OK
